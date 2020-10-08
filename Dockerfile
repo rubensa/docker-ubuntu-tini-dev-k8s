@@ -50,6 +50,14 @@ RUN apt-get update \
     && chmod +x /usr/local/bin/eksctl \
     && eksctl completion bash >/etc/bash_completion.d/eksctl \
     #
+    # Install AWS CLI v2
+    && curl -o "awscliv2.zip" -sSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install -i /opt/aws-cli \
+    && rm -rf aws \
+    # Configure aws bash completion for the non-root user
+    && printf "\ncomplete -C '/usr/local/bin/aws_completer' aws\n" >> /home/${USER_NAME}/.bashrc \
+    #
     # Clean up
     && apt-get autoremove -y \
     && apt-get clean -y \
@@ -63,8 +71,3 @@ USER ${USER_NAME}
 
 # Set user home directory (see: https://github.com/microsoft/vscode-remote-release/issues/852)
 ENV HOME /home/$USER_NAME
-
-# Create python environment and install awscli
-RUN /bin/bash -l -c "source /opt/conda/etc/profile.d/conda.sh; conda create -y -n k8s python=3.8; /opt/conda/envs/k8s/bin/pip install awscli" \
-    # Activate project environment
-    && printf "\nconda activate k8s\n" >> /home/${USER_NAME}/.bashrc
