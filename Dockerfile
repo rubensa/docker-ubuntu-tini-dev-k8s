@@ -1,18 +1,19 @@
 FROM rubensa/ubuntu-tini-dev
 LABEL author="Ruben Suarez <rubensa@gmail.com>"
 
-ARG HELM_VERSION=3.3.4
-# https://storage.googleapis.com/kubernetes-release/release/stable.txt
-ARG KUBECTL_VERSION=1.19.2
-
-# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-ARG AWS_IAM_AUTH_VERSION_URL=https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/aws-iam-authenticator
-
 # Tell docker that all future commands should be run as root
 USER root
 
 # Set root home directory
 ENV HOME=/root
+
+ARG HELM_VERSION=3.3.4
+# https://storage.googleapis.com/kubernetes-release/release/stable.txt
+ARG KUBECTL_VERSION=1.19.2
+ADD https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl /usr/local/bin/kubectl
+
+# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
+ADD https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -33,15 +34,12 @@ RUN apt-get update \
     && helm completion bash >/etc/bash_completion.d/helm \
     && rm -rf linux-amd64 \
     #
-    # Install kubectl
-    && curl -sSLO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
-    && mv kubectl /usr/local/bin/kubectl \
+    # Make kubectl executable
     && chmod +x /usr/local/bin/kubectl \
+    # kubectl bash completion
     && kubectl completion bash >/etc/bash_completion.d/kubectl \
     #
-    # Install aws-iam-authenticator
-    && curl -sSLO ${AWS_IAM_AUTH_VERSION_URL} \
-    && mv aws-iam-authenticator /usr/local/bin/aws-iam-authenticator \
+    # Make aws-iam-authenticator executable
     && chmod +x /usr/local/bin/aws-iam-authenticator \
     #
     # Install eksctl
