@@ -74,6 +74,8 @@ helm version
 kubectl version
 aws-iam-authenticator version
 eksctl version
+kubectx
+kubens
 aws --version
 ```
 
