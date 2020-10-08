@@ -52,6 +52,7 @@ RUN apt-get update \
     && curl -o "awscliv2.zip" -sSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \
     && unzip awscliv2.zip \
     && ./aws/install -i /opt/aws-cli \
+    && rm awscliv2.zip \
     && rm -rf aws \
     # Configure aws bash completion for the non-root user
     && printf "\ncomplete -C '/usr/local/bin/aws_completer' aws\n" >> /home/${USER_NAME}/.bashrc \
