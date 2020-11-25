@@ -7,16 +7,15 @@ USER root
 # Set root home directory
 ENV HOME=/root
 
-ARG HELM_VERSION=3.3.4
+# https://github.com/helm/helm/releases
+ARG HELM_VERSION=3.4.1
 
 # https://storage.googleapis.com/kubernetes-release/release/stable.txt
-ARG KUBECTL_VERSION=1.19.2
+ARG KUBECTL_VERSION=1.19.4
 ADD https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl /usr/local/bin/kubectl
 
+# https://github.com/ahmetb/kubectx/tags
 ARG KUBECTX_VERSION=0.9.1
-
-# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-ADD https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -51,9 +50,6 @@ RUN apt-get update \
     # kubectx and kubens bash completion
     && mv kubectx-${KUBECTX_VERSION}/completion/kubectx.bash /etc/bash_completion.d/kubectx \
     && mv kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/bash_completion.d/kubens \
-    #
-    # Make aws-iam-authenticator executable
-    && chmod +x /usr/local/bin/aws-iam-authenticator \
     #
     # Install eksctl
     && curl -sSL "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_Linux_amd64.tar.gz" | tar xz  \
