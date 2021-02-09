@@ -8,14 +8,20 @@ USER root
 ENV HOME=/root
 
 # https://github.com/helm/helm/releases
-ARG HELM_VERSION=3.4.1
+ARG HELM_VERSION=3.5.2
 
 # https://storage.googleapis.com/kubernetes-release/release/stable.txt
-ARG KUBECTL_VERSION=1.19.4
+ARG KUBECTL_VERSION=1.20.2
 ADD https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl /usr/local/bin/kubectl
 
-# https://github.com/ahmetb/kubectx/tags
+# https://github.com/ahmetb/kubectx/releases
 ARG KUBECTX_VERSION=0.9.1
+
+# https://github.com/weaveworks/eksctl/releases
+ARG EKSCTL_VERSION=0.37.0
+
+# https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
+ARG AWSCLI_VERSION=2.1.24
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -52,13 +58,13 @@ RUN apt-get update \
     && mv kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/bash_completion.d/kubens \
     #
     # Install eksctl
-    && curl -sSL "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_Linux_amd64.tar.gz" | tar xz  \
+    && curl -sSL "https://github.com/weaveworks/eksctl/releases/download/${EKSCTL_VERSION}/eksctl_Linux_amd64.tar.gz" | tar xz  \
     && mv eksctl /usr/local/bin \
     && chmod +x /usr/local/bin/eksctl \
     && eksctl completion bash >/etc/bash_completion.d/eksctl \
     #
     # Install AWS CLI v2
-    && curl -o "awscliv2.zip" -sSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \
+    && curl -o "awscliv2.zip" -sSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWSCLI_VERSION}.zip" \
     && unzip awscliv2.zip \
     && ./aws/install -i /opt/aws-cli \
     && rm awscliv2.zip \
