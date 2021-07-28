@@ -19,6 +19,9 @@ ARG KUBECTX_VERSION=0.9.1
 # https://github.com/wercker/stern/releases
 ARG STERN_VERSION=1.11.0
 
+# https://github.com/derailed/k9s/releases
+ARG K9S_VERSION=0.24.14
+
 # https://github.com/weaveworks/eksctl/releases
 ARG EKSCTL_VERSION=0.37.0
 
@@ -71,6 +74,12 @@ RUN apt-get update \
     && chmod +x /usr/local/bin/stern \
     # stern bash completion
     && stern --completion=bash bash >/etc/bash_completion.d/stern \
+    #
+    # Install k9s
+    && echo 'Intalling k9s...' \
+    && curl -sSL "https://github.com/derailed/k9s/releases/download/v0.24.14/k9s_Linux_x86_64.tar.gz" | tar xzf - k9s  \
+    && mv k9s /usr/local/bin \
+    && chmod +x /usr/local/bin/k9s \
     #
     # Install eksctl
     && echo 'Intalling eksctl...' \
