@@ -72,10 +72,11 @@ You can check installed develpment software:
 jq --version
 helm version
 kubectl version
-aws-iam-authenticator version
-eksctl version
 kubectx
 kubens
+stern --help
+k9s info
+eksctl version
 aws --version
 ```
 
