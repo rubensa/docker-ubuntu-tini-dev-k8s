@@ -8,25 +8,25 @@ USER root
 ENV HOME=/root
 
 # https://github.com/helm/helm/releases
-ARG HELM_VERSION=3.5.2
+ARG HELM_VERSION=3.7.1
 
 # https://storage.googleapis.com/kubernetes-release/release/stable.txt
-ARG KUBECTL_VERSION=1.20.2
+ARG KUBECTL_VERSION=1.22.4
 
 # https://github.com/ahmetb/kubectx/releases
-ARG KUBECTX_VERSION=0.9.1
+ARG KUBECTX_VERSION=0.9.4
 
 # https://github.com/wercker/stern/releases
 ARG STERN_VERSION=1.11.0
 
 # https://github.com/derailed/k9s/releases
-ARG K9S_VERSION=0.24.14
+ARG K9S_VERSION=0.25.6
 
 # https://github.com/weaveworks/eksctl/releases
-ARG EKSCTL_VERSION=0.37.0
+ARG EKSCTL_VERSION=0.74.0
 
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
-ARG AWSCLI_VERSION=2.1.24
+ARG AWSCLI_VERSION=2.4.1
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -77,13 +77,13 @@ RUN apt-get update \
     #
     # Install k9s
     && echo 'Intalling k9s...' \
-    && curl -sSL "https://github.com/derailed/k9s/releases/download/v0.24.14/k9s_Linux_x86_64.tar.gz" | tar xzf - k9s  \
+    && curl -sSL "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz" | tar xzf - k9s  \
     && mv k9s /usr/local/bin \
     && chmod +x /usr/local/bin/k9s \
     #
     # Install eksctl
     && echo 'Intalling eksctl...' \
-    && curl -sSL "https://github.com/weaveworks/eksctl/releases/download/${EKSCTL_VERSION}/eksctl_Linux_amd64.tar.gz" | tar xz  \
+    && curl -sSL "https://github.com/weaveworks/eksctl/releases/download/v${EKSCTL_VERSION}/eksctl_Linux_amd64.tar.gz" | tar xz  \
     && mv eksctl /usr/local/bin \
     && chmod +x /usr/local/bin/eksctl \
     && eksctl completion bash >/etc/bash_completion.d/eksctl \
