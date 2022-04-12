@@ -9,38 +9,7 @@ ENV HOME=/root
 
 # https://github.com/helm/helm/releases
 ARG HELM_VERSION=3.7.1
-
-# https://storage.googleapis.com/kubernetes-release/release/stable.txt
-ARG KUBECTL_VERSION=1.22.4
-
-# https://github.com/ahmetb/kubectx/releases
-ARG KUBECTX_VERSION=0.9.4
-
-# https://github.com/wercker/stern/releases
-ARG STERN_VERSION=1.11.0
-
-# https://github.com/derailed/k9s/releases
-ARG K9S_VERSION=0.25.6
-
-# https://github.com/weaveworks/eksctl/releases
-ARG EKSCTL_VERSION=0.74.0
-
-# https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
-ARG AWSCLI_VERSION=2.4.1
-
-# Avoid warnings by switching to noninteractive
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Configure apt and install packages
-RUN apt-get update \
-    #
-    # Install
-    && echo 'Intalling groff and less...' \
-    && apt-get -y install --no-install-recommends groff less \
-    # 
-    # Install jq
-    && echo 'Intalling jq...' \
-    && apt-get -y install jq \
+RUN echo "# Installing helm..." \
     #
     # Install HELM
     && echo 'Intalling helm...' \
@@ -48,14 +17,22 @@ RUN apt-get update \
     && mv linux-amd64/helm /usr/local/bin/helm \
     && chmod +x /usr/local/bin/helm \
     && helm completion bash >/etc/bash_completion.d/helm \
-    && rm -rf linux-amd64 \
-    #
+    && rm -rf linux-amd64
+
+# https://storage.googleapis.com/kubernetes-release/release/stable.txt
+ARG KUBECTL_VERSION=1.22.4
+RUN echo "# Installing kubectl..." \
+     #
     # Install kubectl
     && echo 'Intalling kubectl...' \
     && curl -o /usr/local/bin/kubectl -sSL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
     && chmod +x /usr/local/bin/kubectl \
     # kubectl bash completion
-    && kubectl completion bash >/etc/bash_completion.d/kubectl \
+    && kubectl completion bash >/etc/bash_completion.d/kubectl
+
+# https://github.com/ahmetb/kubectx/releases
+ARG KUBECTX_VERSION=0.9.4
+RUN echo "# Installing kubectx and kubens..." \
     #
     # Install kubectx and kubens
     && echo 'Intalling kubectx and kubens...' \
@@ -66,27 +43,43 @@ RUN apt-get update \
     && chmod +x /usr/local/bin/kubens \
     # kubectx and kubens bash completion
     && mv kubectx-${KUBECTX_VERSION}/completion/kubectx.bash /etc/bash_completion.d/kubectx \
-    && mv kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/bash_completion.d/kubens \
+    && mv kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/bash_completion.d/kubens
+
+# https://github.com/wercker/stern/releases
+ARG STERN_VERSION=1.11.0
+RUN echo "# Installing stern..." \
     #
     # Install stern
     && echo 'Intalling stern...' \
     && curl -o /usr/local/bin/stern -sSL "https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64"  \
     && chmod +x /usr/local/bin/stern \
     # stern bash completion
-    && stern --completion=bash bash >/etc/bash_completion.d/stern \
-    #
+    && stern --completion=bash bash >/etc/bash_completion.d/stern
+
+# https://github.com/derailed/k9s/releases
+ARG K9S_VERSION=0.25.6
+RUN echo "# Installing k9s..." \
+     #
     # Install k9s
     && echo 'Intalling k9s...' \
     && curl -sSL "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz" | tar xzf - k9s  \
     && mv k9s /usr/local/bin \
-    && chmod +x /usr/local/bin/k9s \
+    && chmod +x /usr/local/bin/k9s
+
+# https://github.com/weaveworks/eksctl/releases
+ARG EKSCTL_VERSION=0.74.0
+RUN echo "# Installing eksctl..." \
     #
     # Install eksctl
     && echo 'Intalling eksctl...' \
     && curl -sSL "https://github.com/weaveworks/eksctl/releases/download/v${EKSCTL_VERSION}/eksctl_Linux_amd64.tar.gz" | tar xz  \
     && mv eksctl /usr/local/bin \
     && chmod +x /usr/local/bin/eksctl \
-    && eksctl completion bash >/etc/bash_completion.d/eksctl \
+    && eksctl completion bash >/etc/bash_completion.d/eksctl
+
+# https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
+ARG AWSCLI_VERSION=2.4.1
+RUN echo "# Installing awscli..." \
     #
     # Install AWS CLI v2
     && echo 'Intalling aws...' \
@@ -96,11 +89,25 @@ RUN apt-get update \
     && rm awscliv2.zip \
     && rm -rf aws \
     # Configure aws bash completion for the non-root user
-    && printf "\ncomplete -C '/usr/local/bin/aws_completer' aws\n" >> /home/${USER_NAME}/.bashrc \
+    && printf "\ncomplete -C '/usr/local/bin/aws_completer' aws\n" >> /home/${USER_NAME}/.bashrc
+
+# Avoid warnings by switching to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Configure apt
+RUN apt-get update
+
+RUN echo "# Installing groff and less..." \
     #
-    # Clean up
-    && echo 'Cleaning up...' \
-    && apt-get autoremove -y \
+    # Install
+    && apt-get -y install --no-install-recommends groff less
+RUN echo "# Installing jq..." \
+    # 
+    # Install jq
+    && apt-get -y install jq
+
+# Clean up apt
+RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
