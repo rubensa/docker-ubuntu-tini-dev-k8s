@@ -12,7 +12,6 @@ ARG HELM_VERSION=3.8.1
 RUN echo "# Installing helm..." \
     #
     # Install HELM
-    && echo 'Intalling helm...' \
     && curl -sSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz | tar xvz \
     && mv linux-amd64/helm /usr/local/bin/helm \
     && chmod +x /usr/local/bin/helm \
@@ -24,7 +23,6 @@ ARG KUBECTL_VERSION=1.23.5
 RUN echo "# Installing kubectl..." \
      #
     # Install kubectl
-    && echo 'Intalling kubectl...' \
     && curl -o /usr/local/bin/kubectl -sSL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
     && chmod +x /usr/local/bin/kubectl \
     # kubectl bash completion
@@ -35,7 +33,6 @@ ARG KUBECTX_VERSION=0.9.4
 RUN echo "# Installing kubectx and kubens..." \
     #
     # Install kubectx and kubens
-    && echo 'Intalling kubectx and kubens...' \
     && curl -sSL https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz | tar xvz \
     && mv kubectx-${KUBECTX_VERSION}/kubectx /usr/local/bin/kubectx \
     && mv kubectx-${KUBECTX_VERSION}/kubens /usr/local/bin/kubens \
@@ -50,7 +47,6 @@ ARG STERN_VERSION=1.11.0
 RUN echo "# Installing stern..." \
     #
     # Install stern
-    && echo 'Intalling stern...' \
     && curl -o /usr/local/bin/stern -sSL "https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64"  \
     && chmod +x /usr/local/bin/stern \
     # stern bash completion
@@ -61,7 +57,6 @@ ARG K9S_VERSION=0.25.18
 RUN echo "# Installing k9s..." \
      #
     # Install k9s
-    && echo 'Intalling k9s...' \
     && curl -sSL "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz" | tar xzf - k9s  \
     && mv k9s /usr/local/bin \
     && chmod +x /usr/local/bin/k9s
@@ -71,7 +66,6 @@ ARG EKSCTL_VERSION=0.92.0
 RUN echo "# Installing eksctl..." \
     #
     # Install eksctl
-    && echo 'Intalling eksctl...' \
     && curl -sSL "https://github.com/weaveworks/eksctl/releases/download/v${EKSCTL_VERSION}/eksctl_Linux_amd64.tar.gz" | tar xz  \
     && mv eksctl /usr/local/bin \
     && chmod +x /usr/local/bin/eksctl \
@@ -82,7 +76,6 @@ ARG AWSCLI_VERSION=2.5.4
 RUN echo "# Installing awscli..." \
     #
     # Install AWS CLI v2
-    && echo 'Intalling aws...' \
     && curl -o "awscliv2.zip" -sSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWSCLI_VERSION}.zip" \
     && unzip awscliv2.zip \
     && ./aws/install -i /opt/aws-cli \
@@ -97,14 +90,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Configure apt
 RUN apt-get update
 
-RUN echo "# Installing groff and less..." \
+RUN echo "# Installing groff, less and jq..." \
     #
-    # Install
-    && apt-get -y install --no-install-recommends groff less
-RUN echo "# Installing jq..." \
-    # 
-    # Install jq
-    && apt-get -y install jq
+    # Install groff, less and jq
+    && apt-get -y install --no-install-recommends groff less jq
 
 # Clean up apt
 RUN apt-get autoremove -y \
