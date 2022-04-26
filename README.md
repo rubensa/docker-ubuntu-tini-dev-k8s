@@ -1,6 +1,6 @@
 # Docker image with Kubernetes tools
 
-This is a Docker image based on [rubensa/ubuntu-tini-dev](https://github.com/rubensa/docker-ubuntu-tini-dev) and includes various kubernetes tools.
+This is a Docker image based on [rubensa/ubuntu-tini-dev-chrome](https://github.com/rubensa/docker-ubuntu-tini-dev-chrome) and includes various kubernetes tools.
 
 ## Building
 
@@ -10,7 +10,7 @@ You can build the image like this:
 #!/usr/bin/env bash
 
 DOCKER_REPOSITORY_NAME="rubensa"
-DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8s"
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-chrome-k8s"
 DOCKER_IMAGE_TAG="latest"
 
 docker buildx build --platform=linux/amd64,linux/arm64 --no-cache \
@@ -31,7 +31,7 @@ You can run the container like this (change --rm with -d if you don't want the c
 #!/usr/bin/env bash
 
 DOCKER_REPOSITORY_NAME="rubensa"
-DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8s"
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-chrome-k8s"
 DOCKER_IMAGE_TAG="latest"
 
 # Get current user UID
@@ -75,7 +75,7 @@ You can connect to the running container like this:
 ```
 #!/usr/bin/env bash
 
-DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8s"
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-chrome-k8s"
 
 docker exec -it \
   "${DOCKER_IMAGE_NAME}" \
@@ -107,7 +107,7 @@ You can stop the running container like this:
 ```
 #!/usr/bin/env bash
 
-DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8s"
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-chrome-k8s"
 
 docker stop  \
   "${DOCKER_IMAGE_NAME}"
@@ -120,7 +120,7 @@ If you run the container without --rm you can start it again like this:
 ```
 #!/usr/bin/env bash
 
-DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8s"
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-chrome-k8s"
 
 docker start \
   "${DOCKER_IMAGE_NAME}"
@@ -133,7 +133,7 @@ If you run the container without --rm you can remove once stopped like this:
 ```
 #!/usr/bin/env bash
 
-DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8s"
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-chrome-k8s"
 
 docker rm \
   "${DOCKER_IMAGE_NAME}"
