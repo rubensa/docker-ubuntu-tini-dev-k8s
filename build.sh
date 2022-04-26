@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 DOCKER_REPOSITORY_NAME="rubensa"
-DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8s"
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-chrome-k8s"
 DOCKER_IMAGE_TAG="20.04"
 
 # see: https://github.com/docker/buildx/issues/495#issuecomment-761562905
