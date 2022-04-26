@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 DOCKER_REPOSITORY_NAME="rubensa"
-DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8s"
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-chrome-k8s"
 DOCKER_IMAGE_TAG="18.04"
 
 # Get current user UID
