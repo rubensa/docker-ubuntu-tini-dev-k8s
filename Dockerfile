@@ -1,6 +1,9 @@
 FROM rubensa/ubuntu-tini-dev
 LABEL author="Ruben Suarez <rubensa@gmail.com>"
 
+# Architecture component of TARGETPLATFORM (platform of the build result)
+ARG TARGETARCH
+
 # Tell docker that all future commands should be run as root
 USER root
 
@@ -12,18 +15,21 @@ ARG HELM_VERSION=3.8.1
 RUN echo "# Installing helm..." \
     #
     # Install HELM
-    && curl -sSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz | tar xvz \
-    && mv linux-amd64/helm /usr/local/bin/helm \
+    && cd /tmp \
+    && curl -o helm-linux.tar.gz -sSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${TARGETARCH}.tar.gz \
+    && tar xvfz helm-linux.tar.gz \
+    && mv linux-${TARGETARCH}/helm /usr/local/bin/helm \
     && chmod +x /usr/local/bin/helm \
     && helm completion bash >/etc/bash_completion.d/helm \
-    && rm -rf linux-amd64
+    && rm helm-linux.tar.gz \
+    && rm -rf linux-${TARGETARCH}
 
 # https://storage.googleapis.com/kubernetes-release/release/stable.txt
 ARG KUBECTL_VERSION=1.23.5
 RUN echo "# Installing kubectl..." \
      #
     # Install kubectl
-    && curl -o /usr/local/bin/kubectl -sSL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+    && curl -o /usr/local/bin/kubectl -sSL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/${TARGETARCH}/kubectl \
     && chmod +x /usr/local/bin/kubectl \
     # kubectl bash completion
     && kubectl completion bash >/etc/bash_completion.d/kubectl
@@ -44,20 +50,24 @@ RUN echo "# Installing kubectx and kubens..." \
 
 # https://github.com/wercker/stern/releases
 ARG STERN_VERSION=1.11.0
-RUN echo "# Installing stern..." \
-    #
-    # Install stern
-    && curl -o /usr/local/bin/stern -sSL "https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64"  \
-    && chmod +x /usr/local/bin/stern \
-    # stern bash completion
-    && stern --completion=bash bash >/etc/bash_completion.d/stern
+# stern is only availabe for amd64 architecture
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        echo "# Installing stern..." \
+        #
+        # Install stern
+        && curl -o /usr/local/bin/stern -sSL "https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64"  \
+        && chmod +x /usr/local/bin/stern \
+        # stern bash completion
+        && stern --completion=bash bash >/etc/bash_completion.d/stern; \
+    fi
 
 # https://github.com/derailed/k9s/releases
 ARG K9S_VERSION=0.25.18
 RUN echo "# Installing k9s..." \
      #
     # Install k9s
-    && curl -sSL "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz" | tar xzf - k9s  \
+    && if [ "$TARGETARCH" = "amd64" ]; then TARGET=x86_64; else TARGET=$TARGETARCH; fi \
+    && curl -sSL "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_${TARGET}.tar.gz" | tar xzf - k9s  \
     && mv k9s /usr/local/bin \
     && chmod +x /usr/local/bin/k9s
 
@@ -66,7 +76,7 @@ ARG EKSCTL_VERSION=0.92.0
 RUN echo "# Installing eksctl..." \
     #
     # Install eksctl
-    && curl -sSL "https://github.com/weaveworks/eksctl/releases/download/v${EKSCTL_VERSION}/eksctl_Linux_amd64.tar.gz" | tar xz  \
+    && curl -sSL "https://github.com/weaveworks/eksctl/releases/download/v${EKSCTL_VERSION}/eksctl_Linux_${TARGETARCH}.tar.gz" | tar xz  \
     && mv eksctl /usr/local/bin \
     && chmod +x /usr/local/bin/eksctl \
     && eksctl completion bash >/etc/bash_completion.d/eksctl
@@ -74,9 +84,10 @@ RUN echo "# Installing eksctl..." \
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
 ARG AWSCLI_VERSION=2.5.4
 RUN echo "# Installing awscli..." \
+    && if [ "$TARGETARCH" = "arm64" ]; then TARGET=aarch64; elif [ "$TARGETARCH" = "amd64" ]; then TARGET=x86_64; else TARGET=$TARGETARCH; fi \
     #
     # Install AWS CLI v2
-    && curl -o "awscliv2.zip" -sSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWSCLI_VERSION}.zip" \
+    && curl -o "awscliv2.zip" -sSL "https://awscli.amazonaws.com/awscli-exe-linux-${TARGET}-${AWSCLI_VERSION}.zip" \
     && unzip awscliv2.zip \
     && ./aws/install -i /opt/aws-cli \
     && rm awscliv2.zip \
