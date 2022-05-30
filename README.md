@@ -1,6 +1,6 @@
 # Docker image with Kubernetes tools
 
-This is a Docker image based on [rubensa/ubuntu-tini-dev](https://github.com/rubensa/docker-ubuntu-tini-dev) and includes various kubernetes tools.
+This is a Docker image based on [rubensa/ubuntu-tini-dev](https://github.com/rubensa/docker-ubuntu-tini-dev) 22.04 and includes various kubernetes tools.
 
 ## Building
 
@@ -11,7 +11,7 @@ You can build the image like this:
 
 DOCKER_REPOSITORY_NAME="rubensa"
 DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8s"
-DOCKER_IMAGE_TAG="latest"
+DOCKER_IMAGE_TAG="22.04"
 
 docker buildx build --platform=linux/amd64,linux/arm64 --no-cache \
   -t "${DOCKER_REPOSITORY_NAME}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}" \
@@ -32,7 +32,7 @@ You can run the container like this (change --rm with -d if you don't want the c
 
 DOCKER_REPOSITORY_NAME="rubensa"
 DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8s"
-DOCKER_IMAGE_TAG="latest"
+DOCKER_IMAGE_TAG="22.04"
 
 # Get current user UID
 USER_ID=$(id -u)
