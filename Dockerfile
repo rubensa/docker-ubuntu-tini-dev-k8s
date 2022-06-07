@@ -19,7 +19,8 @@ RUN echo "# Installing helm..." \
     && curl -o helm-linux.tar.gz -sSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${TARGETARCH}.tar.gz \
     && tar xvfz helm-linux.tar.gz \
     && mv linux-${TARGETARCH}/helm /usr/local/bin/helm \
-    && chmod +x /usr/local/bin/helm \
+    && chown root:root /usr/local/bin/helm \
+    && chmod 755 /usr/local/bin/helm \
     && helm completion bash >/etc/bash_completion.d/helm \
     && rm helm-linux.tar.gz \
     && rm -rf linux-${TARGETARCH}
@@ -30,7 +31,8 @@ RUN echo "# Installing kubectl..." \
      #
     # Install kubectl
     && curl -o /usr/local/bin/kubectl -sSL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/${TARGETARCH}/kubectl \
-    && chmod +x /usr/local/bin/kubectl \
+    && chown root:root /usr/local/bin/kubectl \
+    && chmod 755 /usr/local/bin/kubectl \
     # kubectl bash completion
     && kubectl completion bash >/etc/bash_completion.d/kubectl
 
@@ -42,8 +44,10 @@ RUN echo "# Installing kubectx and kubens..." \
     && curl -sSL https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz | tar xvz \
     && mv kubectx-${KUBECTX_VERSION}/kubectx /usr/local/bin/kubectx \
     && mv kubectx-${KUBECTX_VERSION}/kubens /usr/local/bin/kubens \
-    && chmod +x /usr/local/bin/kubectx \
-    && chmod +x /usr/local/bin/kubens \
+    && chown root:root /usr/local/bin/kubectx \
+    && chmod 755 /usr/local/bin/kubectx \
+    && chown root:root /usr/local/bin/kubens \
+    && chmod 755 /usr/local/bin/kubens \
     # kubectx and kubens bash completion
     && mv kubectx-${KUBECTX_VERSION}/completion/kubectx.bash /etc/bash_completion.d/kubectx \
     && mv kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/bash_completion.d/kubens
@@ -56,7 +60,8 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
         #
         # Install stern
         && curl -o /usr/local/bin/stern -sSL "https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64"  \
-        && chmod +x /usr/local/bin/stern \
+        && chown root:root /usr/local/bin/stern \
+        && chmod 755 /usr/local/bin/stern \
         # stern bash completion
         && stern --completion=bash bash >/etc/bash_completion.d/stern; \
     fi
@@ -69,7 +74,8 @@ RUN echo "# Installing k9s..." \
     && if [ "$TARGETARCH" = "amd64" ]; then TARGET=x86_64; else TARGET=$TARGETARCH; fi \
     && curl -sSL "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_${TARGET}.tar.gz" | tar xzf - k9s  \
     && mv k9s /usr/local/bin \
-    && chmod +x /usr/local/bin/k9s
+    && chown root:root /usr/local/bin/k9s \
+    && chmod 755 /usr/local/bin/k9s
 
 # https://github.com/weaveworks/eksctl/releases
 ARG EKSCTL_VERSION=0.99.0
@@ -78,7 +84,8 @@ RUN echo "# Installing eksctl..." \
     # Install eksctl
     && curl -sSL "https://github.com/weaveworks/eksctl/releases/download/v${EKSCTL_VERSION}/eksctl_Linux_${TARGETARCH}.tar.gz" | tar xz  \
     && mv eksctl /usr/local/bin \
-    && chmod +x /usr/local/bin/eksctl \
+    && chown root:root /usr/local/bin/eksctl \
+    && chmod 755 /usr/local/bin/eksctl \
     && eksctl completion bash >/etc/bash_completion.d/eksctl
 
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
