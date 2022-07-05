@@ -102,6 +102,16 @@ RUN echo "# Installing awscli..." \
     # Configure aws bash completion for the non-root user
     && printf "\ncomplete -C '/usr/local/bin/aws_completer' aws\n" >> /home/${USER_NAME}/.bashrc
 
+ADD aws-profile.sh /usr/local/bin/aws-profile.sh
+RUN echo "# Installing aws-profile..." \
+    #
+    # Enable aws-profile execution
+    && chmod +x /usr/local/bin/aws-profile.sh \
+    #
+    # Configure aws-profile for the non-root user
+    && printf "\n. /usr/local/bin/aws-profile.sh\n" >> /home/${USER_NAME}/.bashrc 
+
+
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
