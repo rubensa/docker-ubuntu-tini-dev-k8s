@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-docker stop \
-  ubuntu-tini-dev-k8s
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-k8"
+
+docker stop  \
+  "${DOCKER_IMAGE_NAME}"
