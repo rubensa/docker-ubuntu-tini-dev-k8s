@@ -11,7 +11,7 @@ USER root
 ENV HOME=/root
 
 # https://github.com/helm/helm/releases
-ARG HELM_VERSION=3.10.0
+ARG HELM_VERSION=3.10.3
 RUN echo "# Installing helm..." \
   #
   # Install HELM
@@ -26,7 +26,7 @@ RUN echo "# Installing helm..." \
   && rm -rf linux-${TARGETARCH}
 
 # https://storage.googleapis.com/kubernetes-release/release/stable.txt
-ARG KUBECTL_VERSION=1.25.2
+ARG KUBECTL_VERSION=1.26.0
 RUN echo "# Installing kubectl..." \
   #
   # Install kubectl
@@ -52,22 +52,24 @@ RUN echo "# Installing kubectx and kubens..." \
   && mv kubectx-${KUBECTX_VERSION}/completion/kubectx.bash /etc/bash_completion.d/kubectx \
   && mv kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/bash_completion.d/kubens
 
-# https://github.com/wercker/stern/releases
-ARG STERN_VERSION=1.11.0
-# stern is only availabe for amd64 architecture
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-  echo "# Installing stern..." \
+# https://github.com/stern/stern/releases
+ARG STERN_VERSION=1.22.0
+RUN echo "# Installing stern..." \
   #
   # Install stern
-  && curl -o /usr/local/bin/stern -sSL "https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64"  \
+  && cd /tmp \
+  && curl -o stern_linux.tar.gz -sSL https://github.com/stern/stern/releases/download/v${STERN_VERSION}/stern_${STERN_VERSION}_linux_${TARGETARCH}.tar.gz \
+  && mkdir -p /tmp/stern_linux \
+  && tar xvfz stern_linux.tar.gz -C /tmp/stern_linux \
+  && mv stern_linux/stern /usr/local/bin/stern \
   && chown root:root /usr/local/bin/stern \
   && chmod 755 /usr/local/bin/stern \
-  # stern bash completion
-  && stern --completion=bash bash >/etc/bash_completion.d/stern; \
-  fi
+  && stern --completion=bash >/etc/bash_completion.d/stern \
+  && rm stern_linux.tar.gz \
+  && rm -rf stern_linux
 
 # https://github.com/derailed/k9s/releases
-ARG K9S_VERSION=0.26.6
+ARG K9S_VERSION=0.26.7
 RUN echo "# Installing k9s..." \
   #
   # Install k9s
@@ -78,7 +80,7 @@ RUN echo "# Installing k9s..." \
   && chmod 755 /usr/local/bin/k9s
 
 # https://github.com/weaveworks/eksctl/releases
-ARG EKSCTL_VERSION=0.113.0
+ARG EKSCTL_VERSION=0.123.0
 RUN echo "# Installing eksctl..." \
   #
   # Install eksctl
@@ -89,7 +91,7 @@ RUN echo "# Installing eksctl..." \
   && eksctl completion bash >/etc/bash_completion.d/eksctl
 
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
-ARG AWSCLI_VERSION=2.7.35
+ARG AWSCLI_VERSION=2.9.8
 RUN echo "# Installing awscli..." \
   && if [ "$TARGETARCH" = "arm64" ]; then TARGET=aarch64; elif [ "$TARGETARCH" = "amd64" ]; then TARGET=x86_64; else TARGET=$TARGETARCH; fi \
   #
