@@ -73,8 +73,7 @@ ARG K9S_VERSION=0.27.3
 RUN echo "# Installing k9s..." \
   #
   # Install k9s
-  && if [ "$TARGETARCH" = "amd64" ]; then TARGET=x86_64; else TARGET=$TARGETARCH; fi \
-  && curl -sSL "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_${TARGET}.tar.gz" | tar xzf - k9s  \
+  && curl -sSL "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_${TARGETARCH}.tar.gz" | tar xzf - k9s  \
   && mv k9s /usr/local/bin \
   && chown root:root /usr/local/bin/k9s \
   && chmod 755 /usr/local/bin/k9s
