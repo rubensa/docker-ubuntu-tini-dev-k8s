@@ -119,10 +119,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Configure apt
 RUN apt-get update
 
-RUN echo "# Installing groff, less and jq..." \
+RUN echo "# Installing groff and less..." \
   #
-  # Install groff, less and jq
-  && apt-get -y install --no-install-recommends groff less jq
+  # Install groff and less
+  && apt-get -y install --no-install-recommends groff less
 
 # Clean up apt
 RUN apt-get autoremove -y \
