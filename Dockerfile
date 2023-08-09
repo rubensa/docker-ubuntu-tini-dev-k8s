@@ -11,7 +11,7 @@ USER root
 ENV HOME=/root
 
 # https://github.com/helm/helm/releases
-ARG HELM_VERSION=3.12.1
+ARG HELM_VERSION=3.12.2
 RUN echo "# Installing helm..." \
   #
   # Install HELM
@@ -26,7 +26,7 @@ RUN echo "# Installing helm..." \
   && rm -rf linux-${TARGETARCH}
 
 # https://storage.googleapis.com/kubernetes-release/release/stable.txt
-ARG KUBECTL_VERSION=1.27.3
+ARG KUBECTL_VERSION=1.27.4
 RUN echo "# Installing kubectl..." \
   #
   # Install kubectl
@@ -37,7 +37,7 @@ RUN echo "# Installing kubectl..." \
   && kubectl completion bash >/etc/bash_completion.d/kubectl
 
 # https://github.com/ahmetb/kubectx/releases
-ARG KUBECTX_VERSION=0.9.4
+ARG KUBECTX_VERSION=0.9.5
 RUN echo "# Installing kubectx and kubens..." \
   #
   # Install kubectx and kubens
@@ -79,7 +79,7 @@ RUN echo "# Installing k9s..." \
   && chmod 755 /usr/local/bin/k9s
 
 # https://github.com/weaveworks/eksctl/releases
-ARG EKSCTL_VERSION=0.146.0
+ARG EKSCTL_VERSION=0.151.0
 RUN echo "# Installing eksctl..." \
   #
   # Install eksctl
@@ -90,7 +90,7 @@ RUN echo "# Installing eksctl..." \
   && eksctl completion bash >/etc/bash_completion.d/eksctl
 
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst (https://raw.githubusercontent.com/aws/aws-cli/v2/CHANGELOG.rst)
-ARG AWSCLI_VERSION=2.12.4
+ARG AWSCLI_VERSION=2.13.7
 RUN echo "# Installing awscli..." \
   && if [ "$TARGETARCH" = "arm64" ]; then TARGET=aarch64; elif [ "$TARGETARCH" = "amd64" ]; then TARGET=x86_64; else TARGET=$TARGETARCH; fi \
   #
