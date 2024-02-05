@@ -77,7 +77,8 @@ RUN echo "# Installing k9s..." \
   && curl -sSL "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_${TARGETARCH}.tar.gz" | tar xzf - k9s  \
   && mv k9s /usr/local/bin \
   && chown root:root /usr/local/bin/k9s \
-  && chmod 755 /usr/local/bin/k9s
+  && chmod 755 /usr/local/bin/k9s \
+  && k9s completion bash >/etc/bash_completion.d/k9s
 
 # https://github.com/weaveworks/eksctl/releases
 ARG EKSCTL_VERSION=0.169.0
