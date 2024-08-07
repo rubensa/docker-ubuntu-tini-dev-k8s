@@ -51,7 +51,9 @@ RUN echo "# Installing kubectx and kubens..." \
   && chmod 755 /usr/local/bin/kubens \
   # kubectx and kubens bash completion
   && mv kubectx-${KUBECTX_VERSION}/completion/kubectx.bash /etc/bash_completion.d/kubectx \
-  && mv kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/bash_completion.d/kubens
+  && mv kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/bash_completion.d/kubens \
+  # Clean up
+  && rm -rf kubectx-${KUBECTX_VERSION}
 
 # https://github.com/stern/stern/releases
 ARG STERN_VERSION=1.30.0
