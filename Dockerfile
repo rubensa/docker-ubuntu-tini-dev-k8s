@@ -11,7 +11,7 @@ USER root
 ENV HOME=/root
 
 # https://github.com/helm/helm/releases
-ARG HELM_VERSION=3.15.2
+ARG HELM_VERSION=3.16.1
 RUN echo "# Installing helm..." \
   #
   # Install HELM
@@ -27,7 +27,7 @@ RUN echo "# Installing helm..." \
 
 # https://github.com/kubernetes/kubectl/tags
 # https://storage.googleapis.com/kubernetes-release/release/stable.txt
-ARG KUBECTL_VERSION=1.30.2
+ARG KUBECTL_VERSION=1.31.0
 RUN echo "# Installing kubectl..." \
   #
   # Install kubectl
@@ -83,7 +83,7 @@ RUN echo "# Installing k9s..." \
   && k9s completion bash >/etc/bash_completion.d/k9s
 
 # https://github.com/weaveworks/eksctl/releases
-ARG EKSCTL_VERSION=0.185.0
+ARG EKSCTL_VERSION=0.190.0
 RUN echo "# Installing eksctl..." \
   #
   # Install eksctl
@@ -95,7 +95,7 @@ RUN echo "# Installing eksctl..." \
 
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
 # https://raw.githubusercontent.com/aws/aws-cli/v2/CHANGELOG.rst
-ARG AWSCLI_VERSION=2.17.11
+ARG AWSCLI_VERSION=2.17.54
 RUN echo "# Installing awscli..." \
   && if [ "$TARGETARCH" = "arm64" ]; then TARGET=aarch64; elif [ "$TARGETARCH" = "amd64" ]; then TARGET=x86_64; else TARGET=$TARGETARCH; fi \
   #
