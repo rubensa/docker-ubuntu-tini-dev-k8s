@@ -12,7 +12,7 @@ USER root
 ENV HOME=/root
 
 # https://github.com/helm/helm/releases
-ARG HELM_VERSION=4.0.4
+ARG HELM_VERSION=4.1.1
 RUN <<EOT
 echo "# Installing helm..."
 #
@@ -94,7 +94,7 @@ k9s completion bash >/etc/bash_completion.d/k9s
 EOT
 
 # https://github.com/weaveworks/eksctl/releases
-ARG EKSCTL_VERSION=0.221.0
+ARG EKSCTL_VERSION=0.224.0
 RUN <<EOT
 echo "# Installing eksctl..."
 #
@@ -108,7 +108,7 @@ EOT
 
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
 # https://raw.githubusercontent.com/aws/aws-cli/v2/CHANGELOG.rst
-ARG AWSCLI_VERSION=2.32.32
+ARG AWSCLI_VERSION=2.34.1
 RUN <<EOT
 echo "# Installing awscli..."
 if [ "$TARGETARCH" = "arm64" ]; then TARGET=aarch64; elif [ "$TARGETARCH" = "amd64" ]; then TARGET=x86_64; else TARGET=$TARGETARCH; fi
